@@ -105,7 +105,6 @@
                 </ul>
             </div>
 
-            <!-- BOTÓN "VOLVER AL MENÚ" RESTAURADO A SU POSICIÓN ORIGINAL -->
             <a href="/" class="w-full text-center text-gray-500 hover:text-white transition-colors text-sm font-medium pt-2 flex items-center justify-center gap-2">
                 <i class="fas fa-chevron-left text-xs"></i> Volver al menú
             </a>
@@ -210,17 +209,19 @@
         const orderInput = document.getElementById('order_name');
         const shippingInput = document.getElementById('shipping_id');
 
+        // OPTIMIZACIÓN: El salto al siguiente campo es casi instantáneo.
         orderInput.addEventListener("input", () => {
             clearTimeout(jumpTimer);
             if (!isManualMode && orderInput.value.trim().length > 0 && !isProcessing) {
-                jumpTimer = setTimeout(() => { if (document.activeElement === orderInput) shippingInput.focus(); }, 100);
+                jumpTimer = setTimeout(() => { if (document.activeElement === orderInput) shippingInput.focus(); }, 1); // <-- CAMBIO: 100 a 1
             }
         });
 
+        // OPTIMIZACIÓN: La verificación se dispara casi instantáneamente.
         shippingInput.addEventListener("input", () => {
             clearTimeout(verifyTimer);
             if (!isManualMode && orderInput.value && shippingInput.value && !isProcessing) {
-                verifyTimer = setTimeout(checkData, 100);
+                verifyTimer = setTimeout(checkData, 1); // <-- CAMBIO: 100 a 1
             }
         });
 
@@ -257,7 +258,7 @@
                 addRecord(nameInput.value, 'success');
                 Swal.fire({
                     icon: 'success', title: '¡Válido!', text: result.message,
-                    confirmButtonColor: '#f59e0b', timer: 1500, showConfirmButton: false,
+                    confirmButtonColor: '#f59e0b', timer: 500, showConfirmButton: false, // <-- CAMBIO: Reducido tiempo de pop-up a 0.5s
                     didClose: () => { 
                         nameInput.value = ''; shippingInput.value = ''; nameInput.focus(); 
                         isProcessing = false; verifyBtn.disabled = false; verifyBtn.innerHTML = '<span>Verificar Ahora</span> <i class="fas fa-check-circle"></i>'; 
