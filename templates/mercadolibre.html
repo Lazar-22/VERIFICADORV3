@@ -239,6 +239,19 @@
             });
         }
     }
+    // --- LÓGICA DE KEEP-ALIVE PARA RENDER ---
+    // Envía un pulso invisible al servidor cada 30 segundos para evitar la hibernación.
+    setInterval(async () => {
+        try {
+            // Hacemos una petición simple a la raíz del servidor. No necesita hacer nada,
+            // solo mantener la conexión viva.
+            await fetch('/'); 
+            console.log("Keep-alive ping sent to server at " + new Date().toLocaleTimeString());
+        } catch (e) {
+            console.warn("Keep-alive ping failed. Server might be down or network issue.", e);
+        }
+    }, 30000); // 30000 milisegundos = 30 segundos
+
 </script>
 </body>
 </html>
